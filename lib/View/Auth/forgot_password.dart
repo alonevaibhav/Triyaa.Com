@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:triyaa_com/Controller/login_page_Controllar.dart';
-import 'package:triyaa_com/View/Auth/forgot_password.dart';
 import 'dart:math' as math;
-import 'package:triyaa_com/View/Auth/sign_up_page.dart';
 
+import 'package:triyaa_com/Controller/forgotpassword_controllar.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  bool _isPasswordVisible = false;
-  bool _rememberMe = false;
   late AnimationController _controller;
   late Animation<double> _leafAnimation;
 
-  LoginControllar controller = new LoginControllar();
 
+  ForgotPasswordControllar controllar = new ForgotPasswordControllar();
 
   @override
   void initState() {
@@ -38,16 +35,26 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       curve: Curves.easeInOut,
     ));
   }
+
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
+    super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F9F2),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back, color: Color(0xFF4A6741)),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      // ),
+
       body: Stack(
         children: [
           _buildBackgroundDecoration(),
@@ -58,10 +65,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 40),
+                    SizedBox(height: 20,),
+
                     _buildHeader(),
                     const SizedBox(height: 40),
-                    _buildLoginForm(),
+                    _buildForgotPasswordForm(),
                   ],
                 ),
               ),
@@ -160,7 +168,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ),
         const SizedBox(height: 20),
         const Text(
-          "Welcome Back\nPlant Parent!",
+          "Forgot\nPassword?",
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -170,7 +178,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ),
         const SizedBox(height: 12),
         Text(
-          "Login to continue your plant care journey",
+          "Don't worry! It happens. Please enter the email address associated with your account.",
           style: TextStyle(
             fontSize: 16,
             color: Colors.black.withOpacity(0.7),
@@ -180,73 +188,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildForgotPasswordForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          _buildCustomTextField(
-            controller: controller.emailController,
-            labelText: "Email",
-            prefixIcon: Icons.email_outlined,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!value.contains('@')) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 20),
-          _buildCustomTextField(
-            controller: controller.passwordController,
-            labelText: "Password",
-            prefixIcon: Icons.lock_outline,
-            obscureText: !_isPasswordVisible,
-            suffixIcon: IconButton(
-              icon: Icon(
-                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                color: const Color(0xFF4A6741),
-              ),
-              onPressed: () {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
-              },
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          _buildRememberMeAndForgotPassword(),
+          _buildEmailField(),
+          const SizedBox(height: 32),
+          _buildSubmitButton(),
           const SizedBox(height: 24),
-          _buildLoginButton(),
-          const SizedBox(height: 24),
-          _buildSocialLogin(),
-          const SizedBox(height: 24),
-          _buildSignUpLink(),
+          _buildBackToLoginLink(),
         ],
       ),
     );
   }
 
-  Widget _buildCustomTextField({
-    required TextEditingController controller,
-    required String labelText,
-    required IconData prefixIcon,
-    bool obscureText = false,
-    Widget? suffixIcon,
-    String? Function(String?)? validator,
-  }) {
+  Widget _buildEmailField() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -260,13 +217,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ],
       ),
       child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
+        controller: controllar.emailController,
+        keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          labelText: labelText,
+          labelText: "Email",
           labelStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
-          prefixIcon: Icon(prefixIcon, color: const Color(0xFF4A6741)),
-          suffixIcon: suffixIcon,
+          prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF4A6741)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -275,61 +231,33 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.all(16),
         ),
-        validator: validator,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          if (!value.contains('@')) {
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
       ),
     );
   }
 
-  Widget _buildRememberMeAndForgotPassword() {
-    return Row(
-      children: [
-        Row(
-          children: [
-            SizedBox(
-              height: 24,
-              width: 24,
-              child: Checkbox(
-                value: _rememberMe,
-                onChanged: (value) {
-                  setState(() {
-                    _rememberMe = value ?? false;
-                  });
-                },
-                activeColor: const Color(0xFF4A6741),
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Text("Remember me"),
-          ],
-        ),
-        const Spacer(),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-            );
-          },
-          child: const Text(
-            "Forgot Password?",
-            style: TextStyle(
-              color: Color(0xFF4A6741),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginButton() {
+  Widget _buildSubmitButton() {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
-            // Handle login
+            // Handle password reset logic here
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Reset link sent to your email'),
+                backgroundColor: Color(0xFF4A6741),
+              ),
+            );
           }
         },
         style: ElevatedButton.styleFrom(
@@ -340,7 +268,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           elevation: 4,
         ),
         child: const Text(
-          "Login",
+          "Send Reset Link",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -351,78 +279,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildSocialLogin() {
-    return Column(
-      children: [
-        Text(
-          "Or continue with",
-          style: TextStyle(
-            color: Colors.black.withOpacity(0.6),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildSocialButton(Icons.g_mobiledata, "Google"),
-            const SizedBox(width: 16),
-            _buildSocialButton(Icons.apple, "Apple"),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialButton(IconData icon, String platform) {
-    return Container(
-      width: 150,
-      height: 48,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: TextButton.icon(
-        onPressed: () {
-          // Handle social login
-        },
-        icon: Icon(icon, color: Colors.black),
-        label: Text(platform),
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignUpLink() {
+  Widget _buildBackToLoginLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ",
+          "Remember your password? ",
           style: TextStyle(
             color: Colors.black.withOpacity(0.6),
           ),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlantSignUpScreen()),
-            );
-          },
+          onPressed: () => Navigator.pop(context),
           child: const Text(
-            "Sign Up",
+            "Login",
             style: TextStyle(
               color: Color(0xFF4A6741),
               fontWeight: FontWeight.bold,
@@ -433,3 +303,4 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 }
+

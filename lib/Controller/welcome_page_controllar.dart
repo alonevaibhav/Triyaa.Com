@@ -101,6 +101,8 @@ class PlantInfoController with ChangeNotifier {
     scaleController?.dispose();
     super.dispose();
   }
+
+
 }
 
 class PlantTip {

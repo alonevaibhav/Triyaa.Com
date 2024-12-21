@@ -1,5 +1,6 @@
 // plant_info_screen.dart
 import 'package:flutter/material.dart';
+import 'package:triyaa_com/Components/WelcomePage/global_page.dart';
 import 'dart:ui' as ui;
 
 import 'package:triyaa_com/Controller/welcome_page_controllar.dart';
@@ -328,6 +329,66 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with TickerProviderSt
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GlobalPage()),
+                );
+              },
+
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4A6741),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Next",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0, end: 20),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeInOut,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(value, 0),
+                        child: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                  TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 20, end: 40),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeInOut,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(value, 0),
+                        child: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
           TextButton(
             onPressed: _controller.skipTutorial,
             child: const Text(
