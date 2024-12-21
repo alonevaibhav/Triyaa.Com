@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:triyaa_com/Components/WelcomePage/PlantPages.dart';
 import 'package:triyaa_com/Components/WelcomePage/global_page.dart';
-import 'package:triyaa_com/View/WelcomePage/welcome_page.dart';
 
 class PageSlider extends StatelessWidget {
   final List<Widget> pages = [

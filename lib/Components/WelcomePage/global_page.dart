@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:triyaa_com/View//Auth/login_page.dart';
+
 
 class GlobalPage extends StatefulWidget {
   @override
@@ -143,7 +145,12 @@ class _GlobalPageState extends State<GlobalPage> with SingleTickerProviderStateM
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginPage()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4A6741),
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -163,7 +170,9 @@ class _GlobalPageState extends State<GlobalPage> with SingleTickerProviderStateM
                       ),
                       const SizedBox(width: 16),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                        },
                         child: const Text(
                           "Skip",
                           style: TextStyle(

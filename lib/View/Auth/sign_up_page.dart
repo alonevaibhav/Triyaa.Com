@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:triyaa_com/Controller/login_page_Controllar.dart';
-import 'package:triyaa_com/View/Auth/forgot_password.dart';
+import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'package:triyaa_com/View/Auth/sign_up_page.dart';
+
+import 'package:triyaa_com/Controller/signup_controllar.dart';
 
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class PlantSignUpScreen extends StatefulWidget {
+  const PlantSignUpScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _PlantSignUpScreenState createState() => _PlantSignUpScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _PlantSignUpScreenState extends State<PlantSignUpScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
-  bool _rememberMe = false;
+  bool _isConfirmPasswordVisible = false;
+  bool _acceptTerms = false;
   late AnimationController _controller;
   late Animation<double> _leafAnimation;
 
-  LoginControllar controller = new LoginControllar();
-
+  SignUpPage controller = new SignUpPage();
 
   @override
   void initState() {
@@ -38,11 +39,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       curve: Curves.easeInOut,
     ));
   }
+
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
+    super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +60,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     _buildHeader(),
-                    const SizedBox(height: 40),
-                    _buildLoginForm(),
+                    const SizedBox(height: 30),
+                    _buildSignUpForm(),
                   ],
                 ),
               ),
@@ -96,8 +98,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           ),
         ),
         Positioned(
-          top: 100,
-          right: -50,
+          bottom: -50,
+          left: -50,
           child: AnimatedBuilder(
             animation: _leafAnimation,
             builder: (context, child) {
@@ -115,19 +117,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             },
           ),
         ),
-        // Add decorative leaves
-        Positioned(
-          bottom: 50,
-          left: -20,
-          child: Transform.rotate(
-            angle: math.pi / 4,
-            child: Icon(
-              Icons.eco,
-              size: 100,
-              color: const Color(0xFF4A6741).withOpacity(0.1),
+        // Decorative leaves
+        ...List.generate(3, (index) {
+          return Positioned(
+            top: 150.0 + (index * 200),
+            right: index.isEven ? -20 : null,
+            left: index.isEven ? null : -20,
+            child: Transform.rotate(
+              angle: (index.isEven ? 1 : -1) * math.pi / 4,
+              child: Icon(
+                Icons.eco,
+                size: 80,
+                color: const Color(0xFF4A6741).withOpacity(0.1),
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }
@@ -160,7 +165,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ),
         const SizedBox(height: 20),
         const Text(
-          "Welcome Back\nPlant Parent!",
+          "Create Account\nGet Started",
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -170,7 +175,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ),
         const SizedBox(height: 12),
         Text(
-          "Login to continue your plant care journey",
+          "Join our community of plant lovers",
           style: TextStyle(
             fontSize: 16,
             color: Colors.black.withOpacity(0.7),
@@ -180,20 +185,53 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildSignUpForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           _buildCustomTextField(
+            controller: controller.nameController,
+            labelText: "Full Name",
+            prefixIcon: Icons.person_outline,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your full name';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          _buildCustomTextField(
+            controller: controller.phoneController,
+            labelText: "Phone Number",
+            prefixIcon: Icons.phone_outlined,
+            keyboardType: TextInputType.phone,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your phone number';
+              }
+              if (value.length < 10) {
+                return 'Please enter a valid phone number';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          _buildCustomTextField(
             controller: controller.emailController,
-            labelText: "Email",
+            labelText: "Email ID",
             prefixIcon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
               }
-              if (!value.contains('@')) {
+              if (!value.contains('@') || !value.contains('.')) {
                 return 'Please enter a valid email';
               }
               return null;
@@ -218,22 +256,49 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your password';
+                return 'Please enter a password';
               }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
+              if (value.length < 8) {
+                return 'Password must be at least 8 characters';
               }
               return null;
             },
           ),
-          const SizedBox(height: 16),
-          _buildRememberMeAndForgotPassword(),
+          const SizedBox(height: 20),
+          _buildCustomTextField(
+            controller: controller.confirmPasswordController,
+            labelText: "Confirm Password",
+            prefixIcon: Icons.lock_outline,
+            obscureText: !_isConfirmPasswordVisible,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                color: const Color(0xFF4A6741),
+              ),
+              onPressed: () {
+                setState(() {
+                  _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                });
+              },
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please confirm your password';
+              }
+              if (value != controller.passwordController.text) {
+                return 'Passwords do not match';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          _buildTermsAndConditions(),
           const SizedBox(height: 24),
-          _buildLoginButton(),
+          _buildSignUpButton(),
           const SizedBox(height: 24),
-          _buildSocialLogin(),
+          _buildSocialSignUp(),
           const SizedBox(height: 24),
-          _buildSignUpLink(),
+          _buildLoginLink(),
         ],
       ),
     );
@@ -245,6 +310,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     required IconData prefixIcon,
     bool obscureText = false,
     Widget? suffixIcon,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
     String? Function(String?)? validator,
   }) {
     return Container(
@@ -262,6 +329,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -280,41 +349,37 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildRememberMeAndForgotPassword() {
+  Widget _buildTermsAndConditions() {
     return Row(
       children: [
-        Row(
-          children: [
-            SizedBox(
-              height: 24,
-              width: 24,
-              child: Checkbox(
-                value: _rememberMe,
-                onChanged: (value) {
-                  setState(() {
-                    _rememberMe = value ?? false;
-                  });
-                },
-                activeColor: const Color(0xFF4A6741),
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Text("Remember me"),
-          ],
+        SizedBox(
+          height: 24,
+          width: 24,
+          child: Checkbox(
+            value: _acceptTerms,
+            onChanged: (value) {
+              setState(() {
+                _acceptTerms = value ?? false;
+              });
+            },
+            activeColor: const Color(0xFF4A6741),
+          ),
         ),
-        const Spacer(),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-            );
-          },
-          child: const Text(
-            "Forgot Password?",
-            style: TextStyle(
-              color: Color(0xFF4A6741),
-              fontWeight: FontWeight.w600,
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              text: "I agree to the ",
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              children: const [
+                TextSpan(
+                  text: "Terms & Conditions",
+                  style: TextStyle(
+                    color: Color(0xFF4A6741),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -322,14 +387,23 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildSignUpButton() {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
-            // Handle login
+            if (!_acceptTerms) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Please accept the terms and conditions'),
+                  backgroundColor: Color(0xFF4A6741),
+                ),
+              );
+              return;
+            }
+            // Handle sign up
           }
         },
         style: ElevatedButton.styleFrom(
@@ -340,9 +414,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           elevation: 4,
         ),
         child: const Text(
-          "Login",
+          "Sign Up",
           style: TextStyle(
-            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -351,11 +424,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildSocialLogin() {
+  Widget _buildSocialSignUp() {
     return Column(
       children: [
         Text(
-          "Or continue with",
+          "Or sign up with",
           style: TextStyle(
             color: Colors.black.withOpacity(0.6),
           ),
@@ -390,7 +463,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       ),
       child: TextButton.icon(
         onPressed: () {
-          // Handle social login
+          // Handle social sign up
         },
         icon: Icon(icon, color: Colors.black),
         label: Text(platform),
@@ -404,25 +477,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildSignUpLink() {
+  Widget _buildLoginLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ",
+          "Already have an account? ",
           style: TextStyle(
             color: Colors.black.withOpacity(0.6),
           ),
         ),
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlantSignUpScreen()),
-            );
+            Navigator.pop(context);
           },
           child: const Text(
-            "Sign Up",
+            "Login",
             style: TextStyle(
               color: Color(0xFF4A6741),
               fontWeight: FontWeight.bold,

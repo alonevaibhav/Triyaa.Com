@@ -42,7 +42,7 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: 50),
               // Start Button
               CustomButton(
-                text: 'Press Me',
+                text: 'Press Mee',
                 backgroundColor: Colors.white,
                 textColor: Colors.black,
                 onPressed: () {

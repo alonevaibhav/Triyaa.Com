@@ -3,6 +3,7 @@ import 'package:get/get.dart'; // Import GetX package
 import 'package:triyaa_com/Helper/colors.dart';
 import 'package:triyaa_com/Helper/colors.dart';
 import 'package:triyaa_com/Helper/colors.dart';
+import 'package:triyaa_com/View/Dashboard/ButtomNavBar/button_nav_bar.dart';
 
 import 'package:triyaa_com/View/WelcomePage/welcome_page.dart'; // Import WelcomePage
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: backgroundColor),
         // UseMaterial3: true, // Uncomment if Material 3 design is required
       ),
-      home: WelcomePage(),
+      home: HomeScreen(),
     );
   }
 }
