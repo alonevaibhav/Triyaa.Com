@@ -3,13 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:triyaa_com/Controller/plant_controllar.dart';
 import 'package:triyaa_com/Controller/plant_detection_page.dart'; // Import the controller
 
-class PlantDetectionScreen extends GetView<PlantDetectionController> {
+class PlantDetectionScreen extends StatefulWidget {
   PlantDetectionScreen({Key? key}) : super(key: key);
 
-  PlantDetectionController controller = Get.put(PlantDetectionController()); // Initialize controller
+  @override
+  State<PlantDetectionScreen> createState() => _PlantDetectionScreenState();
+}
 
+class _PlantDetectionScreenState extends State<PlantDetectionScreen> {
+  PlantDetectionController controller = Get.put(PlantDetectionController());
+ // Initialize controller
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,72 +223,116 @@ class PlantDetectionScreen extends GetView<PlantDetectionController> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (controller.selectedImage.value != null) {
-        return FutureBuilder<Map<String, dynamic>>(
-          future: controller.plantDetectionAPI.fetchPlantInfo(controller.selectedImage.value!.path),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData) {
-              final plantData = snapshot.data!;
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        File(controller.selectedImage.value!.path),
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      plantData['name'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      plantData['scientific'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      plantData['care'] ?? '',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        );
+      final selectedImage = controller.selectedImage.value;
+      if (selectedImage == null) {
+        return const SizedBox.shrink();
       }
 
-      return const SizedBox.shrink();
+      return FutureBuilder<Map<String, dynamic>>(
+        future: controller.plantDetectionAPI.fetchPlantInfo(selectedImage.path),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: ${snapshot.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+
+          final plantData = snapshot.data!;
+          return Card(
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.file(
+                      File(selectedImage.path),
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildPlantDataSection(
+                    title: plantData['name'] ?? 'Unknown Plant',
+                    scientific: plantData['scientific'],
+                    care: plantData['care'],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
     });
   }
-}
+
+  Widget _buildPlantDataSection({
+    required String title,
+    String? scientific,
+    String? care,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        if (scientific != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            scientific,
+            style: const TextStyle(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+        if (care != null) ...[
+          const SizedBox(height: 12),
+          const Text(
+            'Care Instructions:',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            care,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      ],
+    );
+  }}

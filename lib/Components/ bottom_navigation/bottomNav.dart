@@ -28,7 +28,7 @@ class CustomBottomNav extends GetView<NavigationController> {
               children: [
                 _buildNavItem(0, Icons.forest, "Garden"),
                 const SizedBox(width: 60), // Space for center button
-                _buildNavItem(2, Icons.eco, "Plants"),
+                _buildNavItem(2, Icons.person_off_outlined, "Plants"),
               ],
             ),
           ),
