@@ -46,6 +46,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   lottie: ^2.7.0
   glassmorphism: ^3.0.0
+  rive: ^0.12.4
 
 dev_dependencies:
   flutter_test:
