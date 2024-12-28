@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:lottie/lottie.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import 'package:simple_animations/simple_animations.dart';
 import 'dart:math' as math;
-
 import 'package:triyaa_com/Controller/ProfilePageController/profile_page_controller.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -111,10 +108,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   Widget _buildFloatingIcons() {
     return Stack(
-      children: List.generate(10, (index) {
+      children: List.generate(30, (index) {
         final random = math.Random();
-        final leftPosition = random.nextDouble() * MediaQuery.of(context).size.width;
-        final topPosition = random.nextDouble() * MediaQuery.of(context).size.height;
+        final leftPosition =
+            random.nextDouble() * MediaQuery.of(context).size.width;
+        final topPosition =
+            random.nextDouble() * MediaQuery.of(context).size.height;
 
         // Create a separate controller for each floating icon
         final iconController = AnimationController(
@@ -138,9 +137,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   child: Opacity(
                     opacity: 0.2,
                     child: Icon(
-                      FontAwesomeIcons.leaf,
-                      color: Colors.white,
-                      size: 20.0 * (0.8 + 0.2 * math.sin(iconController.value * math.pi)),
+                      FontAwesomeIcons.tree,
+                      color: Colors.black,
+                      size: 50.0 *
+                          (0.8 +
+                              0.2 * math.sin(iconController.value * math.pi)),
                     ),
                   ),
                 ),
@@ -172,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        Colors.white.withOpacity(0.2),
+                        Colors.white.withOpacity(0.1),
                         Colors.white.withOpacity(0.0),
                       ],
                     ),
@@ -182,62 +183,72 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             ),
           ),
           // Profile Image
-          AnimatedBuilder(
-            animation: _photoAnimation,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: 1.0 + 0.1 * math.sin(_photoAnimation.value * math.pi),
-                child: Container(
-                  width: 250,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: Stack(
-                      children: [
-                        Container(
-                          color: const Color(0xFF4A6741),
-                          child: Center(
-                            child: Text(
-                              "VA",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 80,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withOpacity(0.2),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          // AnimatedBuilder(
+          //       animation: _photoAnimation,
+          //       builder: (context, child) {
+          //         return Transform.scale(
+          //           scale: 1.0 + 0.5 * math.sin(_photoAnimation.value * math.pi),
+          //           child: Container(
+          //             width: 250,
+          //             height: 250,
+          //             decoration: BoxDecoration(
+          //               shape: BoxShape.circle,
+          //               border: Border.all(
+          //                 color: Colors.white,
+          //                 width: 6,
+          //               ),
+          //               boxShadow: [
+          //                 BoxShadow(
+          //                   color: Colors.black.withOpacity(0.5),
+          //                   blurRadius: 25,
+          //                   spreadRadius: 10,
+          //                 ),
+          //               ],
+          //             ),
+          //             child: ClipOval(
+          //               child: Stack(
+          //                 alignment: Alignment.center,
+          //                 children: [
+          //                   Container(
+          //                     color: Color(0xFF4A6741),
+          //                     child: Center(
+          //                       child: Text(
+          //                         "VA",
+          //                         style: TextStyle(
+          //                           color: Colors.white,
+          //                           fontSize: 80,
+          //                           fontWeight: FontWeight.bold,
+          //                           shadows: [
+          //                             Shadow(
+          //                               blurRadius: 10,
+          //                               color: Colors.black.withOpacity(0.5),
+          //                             ),
+          //                           ],
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                   Positioned.fill(
+          //                     child: Container(
+          //                       decoration: BoxDecoration(
+          //                         gradient: LinearGradient(
+          //                           begin: Alignment.topLeft,
+          //                           end: Alignment.bottomRight,
+          //                           colors: [
+          //                             Colors.white.withOpacity(0.3),
+          //                             Colors.transparent,
+          //                           ],
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         );
+          //       },
+          //     ),
           // Name and Title
           Positioned(
             bottom: 50,
@@ -316,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   Widget _buildBody() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.7), // Set opacity to 50%
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -368,10 +379,14 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildContactRow(FontAwesomeIcons.envelope, controller.emailController.text),
-            _buildContactRow(FontAwesomeIcons.phone, controller.phoneController.text),
-            _buildContactRow(FontAwesomeIcons.locationDot, controller.locationController.text),
-            _buildContactRow(FontAwesomeIcons.linkedin, controller.linkedinController.text),
+            _buildContactRow(
+                FontAwesomeIcons.envelope, controller.emailController.text),
+            _buildContactRow(
+                FontAwesomeIcons.phone, controller.phoneController.text),
+            _buildContactRow(FontAwesomeIcons.locationDot,
+                controller.locationController.text),
+            _buildContactRow(
+                FontAwesomeIcons.linkedin, controller.linkedinController.text),
           ],
         ),
       ),
@@ -565,7 +580,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: controller.skills.map((skill) => _buildSkillChip(skill)).toList(),
+          children:
+              controller.skills.map((skill) => _buildSkillChip(skill)).toList(),
         ),
       ],
     );
@@ -590,8 +606,4 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
       ),
     );
   }
-
-// ... Rest of the existing methods with enhanced styling ...
-// Note: I've kept some methods from the previous version for brevity,
-// but you should update their styling to match the new design
 }
