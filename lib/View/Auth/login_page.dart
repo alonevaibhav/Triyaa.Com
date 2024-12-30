@@ -3,6 +3,7 @@ import 'package:triyaa_com/Controller/login_page_Controllar.dart';
 import 'package:triyaa_com/View/Auth/forgot_password.dart';
 import 'dart:math' as math;
 import 'package:triyaa_com/View/Auth/sign_up_page.dart';
+import 'package:triyaa_com/View/Dashboard/ButtomNavBar/button_nav_bar.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -329,9 +330,16 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
-            // Handle login
+            // Handle login (e.g., authentication logic)
+
+            // Navigate to HomeScreen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
           }
         },
+
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF4A6741),
           shape: RoundedRectangleBorder(

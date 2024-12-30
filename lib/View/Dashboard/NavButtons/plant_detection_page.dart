@@ -1,10 +1,10 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:triyaa_com/Controller/plant_controllar.dart';
-import 'package:triyaa_com/Controller/plant_detection_page.dart'; // Import the controller
 
 class PlantDetectionScreen extends StatefulWidget {
   PlantDetectionScreen({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class PlantDetectionScreen extends StatefulWidget {
 
 class _PlantDetectionScreenState extends State<PlantDetectionScreen> {
   PlantDetectionController controller = Get.put(PlantDetectionController());
- // Initialize controller
+  // Initialize controller
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,44 +257,54 @@ class _PlantDetectionScreenState extends State<PlantDetectionScreen> {
           }
 
           final plantData = snapshot.data!;
-          return Card(
-            margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.file(
-                      File(selectedImage.path),
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildPlantDataSection(
-                    title: plantData['name'] ?? 'Unknown Plant',
-                    scientific: plantData['scientific'],
-                    care: plantData['care'],
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _buildPlantDetailsCard(plantData);
         },
       );
     });
   }
 
+  Widget _buildPlantDetailsCard(Map<String, dynamic> plantData) {
+    return Card(
+      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.file(
+                File(controller.selectedImage.value!.path),
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildPlantDataSection(
+              title: plantData['name'] ?? 'Unknown Plant',
+              scientific: plantData['scientific'],
+              englishName: plantData['englishName'],
+              marathiName: plantData['marathiName'],
+              hindiName: plantData['hindiName'],
+              care: plantData['care'],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildPlantDataSection({
     required String title,
     String? scientific,
+    String? englishName,
+    String? marathiName,
+    String? hindiName,
     String? care,
   }) {
     return Column(
@@ -310,12 +320,33 @@ class _PlantDetectionScreenState extends State<PlantDetectionScreen> {
         if (scientific != null) ...[
           const SizedBox(height: 4),
           Text(
-            scientific,
+            'Scientific Name: $scientific',
             style: const TextStyle(
               fontSize: 16,
               fontStyle: FontStyle.italic,
               color: Colors.grey,
             ),
+          ),
+        ],
+        if (englishName != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            'English Name: $englishName',
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+        if (marathiName != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            'Marathi Name: $marathiName',
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+        if (hindiName != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            'Hindi Name: $hindiName',
+            style: const TextStyle(fontSize: 16),
           ),
         ],
         if (care != null) ...[
@@ -335,4 +366,5 @@ class _PlantDetectionScreenState extends State<PlantDetectionScreen> {
         ],
       ],
     );
-  }}
+  }
+}
