@@ -677,7 +677,7 @@ class _ProfilePageState extends State<ProfilePage>
             child: Column(
               children: [
                 BuildHeader(),
-                BodySection(),
+                ProfileView(),
               ],
             ),
           ),

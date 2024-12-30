@@ -4,7 +4,6 @@ import 'package:get/get.dart'; // Import GetX package
 import 'package:triyaa_com/Helper/colors.dart';
 import 'package:triyaa_com/View/Dashboard/ButtomNavBar/button_nav_bar.dart';
 
-
 void main() {
   // Initialize GetX dependency
   runApp(const MyApp());

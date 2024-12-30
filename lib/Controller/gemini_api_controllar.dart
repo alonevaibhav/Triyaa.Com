@@ -167,21 +167,20 @@ import 'package:triyaa_com/Model/gemini_api_model.dart';
 
 class PlantDetectionAPI {
   Future<Map<String, dynamic>> fetchPlantInfo(String imagePath) async {
-
-     const String GEMINIAPI='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCVpoy2WcLgCeTv8FzHLLPuanXEMDe_5_U';
+    const String GEMINIAPI = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCVpoy2WcLgCeTv8FzHLLPuanXEMDe_5_U';
 
     print("heel");
-    // final Uri uri = Uri.parse('${GeminiApiKey.GEMINIAPI}?key=${GeminiApiKey.GEMINI_API_KEY}');
+    // Convert the string URL to a Uri object
+    final Uri uri = Uri.parse(GEMINIAPI);
 
     print('Request URL: $GEMINIAPI');
-
 
     try {
       // Read the image file
       final File imageFile = File(imagePath);
       final List<int> imageBytes = await imageFile.readAsBytes();
       final String base64Image = base64Encode(imageBytes);
-     print("heel");
+      print("heel");
 
       final GeminiModel body = GeminiModel(
         contents: [
@@ -204,10 +203,11 @@ class PlantDetectionAPI {
       );
 
       final response = await http.post(
-        GEMINIAPI as Uri,
+        uri, // Use the Uri object here
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body.toJson()),
       );
+
       // Print response for debugging
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -226,11 +226,9 @@ class PlantDetectionAPI {
       } else {
         throw Exception('API Error: ${response.statusCode} - ${response.body}');
       }
-    }
-    catch (e) {
+    } catch (e) {
       print('Detailed error: ${e.toString()}');
-      throw Exception('Error processing rust: $e');
-
+      throw Exception('Error processing request: $e');
     }
   }
 }
