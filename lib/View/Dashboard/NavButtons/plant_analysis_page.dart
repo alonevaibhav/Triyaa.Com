@@ -287,7 +287,7 @@ class SmartPlantCard extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   progressColor: _getScoreColor(analysisData['seasonalScore']),
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -313,7 +313,7 @@ class SmartPlantCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Card(
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
