@@ -47,6 +47,10 @@ dependencies:
   lottie: ^2.7.0
   glassmorphism: ^3.0.0
   rive: ^0.12.4
+  weatherapi: ^1.1.0
+  geolocator: ^13.0.2
+  percent_indicator: ^4.2.4
+  flutter_animate: ^4.1.1
 
 dev_dependencies:
   flutter_test:

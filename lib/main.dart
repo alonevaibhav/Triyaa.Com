@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: backgroundColor),
         // UseMaterial3: true, // Uncomment if Material 3 design is required
       ),
-      home: WelcomePage(),
-      // HomeScreen(),
+      // home: WelcomePage(),
+      home: HomeScreen(),
     );
   }
 }
