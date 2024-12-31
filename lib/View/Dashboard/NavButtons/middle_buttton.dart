@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:triyaa_com/Controller/gemini_api_controllar.dart';
 import 'package:triyaa_com/Controller/image_piker.dart';
+import 'package:triyaa_com/Controller/integrated_plant_service_controller.dart';
 import 'package:triyaa_com/Controller/weather_data_api_controller.dart';
 import 'package:triyaa_com/View/Dashboard/NavButtons/plant_analysis_page.dart';
 
