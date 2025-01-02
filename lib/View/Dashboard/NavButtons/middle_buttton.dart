@@ -34,7 +34,7 @@ class _MiddleButtonState extends State<MiddleButton> {
         children: [
           Expanded(
             child: _buildActionButton(
-              'Open Gallery',
+              'Open Gallery APP',
               Icons.photo_library,
                   () => _pickImage(ImageSource.gallery),
             ),
