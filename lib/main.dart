@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:triyaa_com/Helper/colors.dart';
+import 'package:triyaa_com/View/Auth/login_page.dart';
 import 'package:triyaa_com/View/Dashboard/ButtomNavBar/button_nav_bar.dart';
 import 'package:triyaa_com/View/WelcomePage/welcome_page.dart';
 
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
         hintColor: hintColor,
         colorScheme: ColorScheme.fromSeed(seedColor: backgroundColor),
       ),
-      home: HomeScreen(),
+      home:
+      // WelcomePage(),
+      LoginPage(),
       // HomeScreen(),
     );
   }

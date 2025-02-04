@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'dart:math' as math;
 
 import 'package:triyaa_com/Controller/signup_controllar.dart';
@@ -21,11 +23,12 @@ class _PlantSignUpScreenState extends State<PlantSignUpScreen>
   late AnimationController _controller;
   late Animation<double> _leafAnimation;
 
-  SignUpPage controller = new SignUpPage();
+  SignUpPage controller = Get.put(SignUpPage()) ;
 
   @override
   void initState() {
     super.initState();
+    controller.resetForm();
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -394,16 +397,11 @@ class _PlantSignUpScreenState extends State<PlantSignUpScreen>
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
-            if (!_acceptTerms) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Please accept the terms and conditions'),
-                  backgroundColor: Color(0xFF4A6741),
-                ),
-              );
-              return;
+            if (_acceptTerms) {  // Ensuring terms are accepted before signing up
+              controller.signUp();
+            } else {
+              Get.snackbar('Terms Required', 'You must accept the terms to proceed.');
             }
-            // Handle sign up
           }
         },
         style: ElevatedButton.styleFrom(
@@ -413,16 +411,20 @@ class _PlantSignUpScreenState extends State<PlantSignUpScreen>
           ),
           elevation: 4,
         ),
-        child: const Text(
+        child: Obx(() => controller.isLoading.value
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Text(
           "Sign Up",
           style: TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
-        ),
+        )),
       ),
     );
   }
+
 
   Widget _buildSocialSignUp() {
     return Column(

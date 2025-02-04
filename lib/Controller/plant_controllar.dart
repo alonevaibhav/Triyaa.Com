@@ -26,8 +26,7 @@ class PlantDetectionController extends GetxController {
           throw Exception('Image file not found');
         }
 
-        final plantData =
-            await plantDetectionAPI.fetchPlantInfo(selectedImage.value!.path);
+        final plantData = await plantDetectionAPI.fetchPlantInfo(selectedImage.value!.path);
         plantInfo.value = plantData;
         errorMessage.value = '';
       }

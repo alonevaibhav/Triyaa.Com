@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:triyaa_com/Controller/login_page_Controllar.dart';
 import 'package:triyaa_com/View/Auth/forgot_password.dart';
 import 'dart:math' as math;
@@ -20,12 +22,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   late AnimationController _controller;
   late Animation<double> _leafAnimation;
 
-  LoginControllar controller = new LoginControllar();
+  LoginController controller = Get.put(LoginController());
 
 
   @override
   void initState() {
     super.initState();
+    controller.erase();
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -330,16 +333,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
-            // Handle login (e.g., authentication logic)
-
-            // Navigate to HomeScreen
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
+            controller.logIn();
           }
         },
-
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF4A6741),
           shape: RoundedRectangleBorder(
@@ -347,14 +343,16 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           ),
           elevation: 4,
         ),
-        child: const Text(
+        child: Obx(() => controller.isLoading.value
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Text(
           "Login",
           style: TextStyle(
-            color: Colors.white,
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
-        ),
+        )),
       ),
     );
   }
