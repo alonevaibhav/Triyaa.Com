@@ -47,8 +47,7 @@ class PlantDetectionAPI {
         ),
       );
 
-      final response = await http.post(
-        uri,
+      final response = await http.post(uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body.toJson()),
       );
